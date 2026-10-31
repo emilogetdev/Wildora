@@ -21,15 +21,13 @@ Wildora is a responsive nature discovery web app designed for GitHub Pages and G
 4. Wait for deployment. GitHub shows the public URL in the Pages section.
 
 ## Set up real user accounts (Supabase)
-Registration is intentionally disabled until you configure your own Supabase project.
-1. Create a project in Supabase and open **Project Settings → API**.
-2. Copy the Project URL and the anon/public key (never use the service_role key).
-3. Replace the placeholders in `supabase-config.js` with those two public values.
-4. In the Supabase SQL Editor, run the complete script from `supabase/schema.sql`.
-5. In Supabase Authentication settings, configure the allowed site URL and redirect URLs to your GitHub Pages URL.
-6. Test registration and email confirmation, then log in. Email delivery and confirmation depend on your Supabase project settings.
+The Wildora Supabase project is connected and the account tables, grants, and row-level security policies have already been created.
+Before account sign-up and favorite syncing can work on the live site, finish these dashboard settings:
+1. In **Integrations → Data API → Exposed schemas**, make sure `public` is enabled. New projects no longer expose newly created public tables automatically.
+2. In **Authentication → URL Configuration**, set the Site URL to `https://emilogetdev.github.io/Wildora/` and add that same URL to the allowed redirect URLs.
+3. Test registration and email confirmation, then log in. Email delivery and confirmation depend on your Supabase project settings.
 
-The database enables row-level security. Users can only read and manage their own profile and favorites. Do not put private keys or database passwords in frontend files.
+The browser uses a publishable key only. The database has row-level security and users can only read and manage their own profile and favorites. Never put a secret key, service_role key, or database password in frontend files.
 
 ## AI photo guide — important limitations
 The current model is a general-purpose image classifier. It returns visual category suggestions, not guaranteed plant or animal species identification. It may be unable to distinguish similar species. First use downloads the model and requires an internet connection. The selected photo is processed in the browser by this app and is not uploaded to a Wildora server. Never eat or handle an unknown plant, mushroom or animal based on an AI result.
