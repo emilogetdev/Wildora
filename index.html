@@ -119,13 +119,35 @@ if(configured){
  try{
   supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
   document.getElementById('accountConfigured').textContent='Account service connected. You can create an account or log in.';
-  const {data}=await supabase.auth.getSession();currentUser=data.session?.user||null;updateAccount();
-  supabase.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;updateAccount()});
+  const {data}=await supabase.auth.getSession();currentUser=data.session?.user||null;updateAccount();if(currentUser)loadCloudFavorites();
+  supabase.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;updateAccount();if(currentUser)loadCloudFavorites()});
  }catch(e){authStatus.textContent='Could not connect to the account service. Check the configuration.'}
 }else{
  document.getElementById('signUpBtn').disabled=true;document.getElementById('signInBtn').disabled=true;
  authStatus.textContent='Registration is waiting for Supabase setup.';
 }
+
+async function loadCloudFavorites(){
+ if(!supabase||!currentUser)return;
+ const {data,error}=await supabase.from('favorites').select('entry_id').eq('user_id',currentUser.id);
+ if(error){authStatus.textContent='Signed in. Cloud favorites are unavailable until the database schema is installed.';return;}
+ const cloud=(data||[]).map(x=>x.entry_id);
+ saved=[...new Set([...saved,...cloud])];localStorage.setItem('wildora-saved',JSON.stringify(saved));render();
+}
+document.addEventListener('click',async e=>{
+ const button=e.target.closest('[data-save]');
+ if(!button||!supabase||!currentUser)return;
+ const entryId=button.dataset.save;
+ await new Promise(resolve=>queueMicrotask(resolve));
+ if(saved.includes(entryId)){
+  const result=await supabase.from('favorites').upsert({user_id:currentUser.id,entry_id:entryId},{onConflict:'user_id,entry_id'});
+  if(result.error)authStatus.textContent='Saved on this device; cloud sync is not ready yet.';
+ }else{
+  const result=await supabase.from('favorites').delete().eq('user_id',currentUser.id).eq('entry_id',entryId);
+  if(result.error)authStatus.textContent='Removed on this device; cloud sync is not ready yet.';
+ }
+});
+
 function updateAccount(){
  const logged=!!currentUser;
  document.getElementById('signOutBtn').hidden=!logged;
