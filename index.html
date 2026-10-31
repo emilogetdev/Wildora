@@ -43,7 +43,7 @@ button,input{transition:box-shadow .2s ease,transform .2s ease}button:focus-visi
 </section>
 <section id="account" class="view" hidden>
  <div class="section-head"><div><h2>Your Wildora account</h2><p>Save discoveries and access your profile.</p></div></div>
- <div class="panel"><div id="accountConfigured" class="auth-note">Account service setup is required before registration can work. Add your Supabase project details to <code>supabase-config.js</code> after creating a project.</div>
+ <div class="panel"><div id="accountConfigured" class="auth-note">Connecting to the Wildora account service…</div>
  <div id="authForms" class="form-stack" style="margin-top:18px">
   <label>Email address<input class="field" id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></label>
   <label>Password<input class="field" id="authPassword" type="password" autocomplete="current-password" placeholder="At least 8 characters"></label>
@@ -156,7 +156,7 @@ function updateAccount(){
  document.getElementById('authPassword').hidden=logged;document.getElementById('authName').hidden=logged;
  document.getElementById('authEmail').value=logged?(currentUser.email||''):'';
  document.getElementById('profileBox').hidden=!logged;
- document.getElementById('profileBox').innerHTML=logged?'<h3>Welcome, '+escapeHTML(currentUser.user_metadata?.display_name||'Explorer')+'!</h3><p class="muted">'+escapeHTML(currentUser.email||'')+'</p><p>Your account is connected. Saved discoveries remain on this device until cloud sync is configured.</p>':'';
+ document.getElementById('profileBox').innerHTML=logged?'<h3>Welcome, '+escapeHTML(currentUser.user_metadata?.display_name||'Explorer')+'!</h3><p class="muted">'+escapeHTML(currentUser.email||'')+'</p><p>Your account is connected. Your saved discoveries are available on this device and sync to your account when cloud access is available.</p>':'';
  document.getElementById('topAccount').textContent=logged?'👤 Profile':'👤 Account';
 }
 document.getElementById('signUpBtn').addEventListener('click',async()=>{
