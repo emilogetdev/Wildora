@@ -1,0 +1,15 @@
+{
+  "name": "Wildora",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "forwardPorts": [
+    8000
+  ],
+  "postCreateCommand": "echo 'Wildora ready. Run: python3 -m http.server 8000'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ritwickdey.LiveServer"
+      ]
+    }
+  }
+}
