@@ -1,44 +1,55 @@
 # Wildora 🌿
 **Discover the wild world.**
 
-Wildora is a responsive nature discovery web app. It is designed to work as a static site on GitHub Pages and can also be edited in GitHub Codespaces.
+Wildora is a responsive nature discovery web app designed for GitHub Pages and GitHub Codespaces.
 
 ## Features
-- Plant and wildlife starter guides
-- **AI photo classification in the browser** using Transformers.js and a vision model
-- Photo preview stays in the browser; the image is not uploaded by this app
-- Outdoor inspiration cards and nature facts
-- Save discoveries in browser local storage
+- Nature guide with plant and wildlife starter entries
+- Browser-based AI photo classification using Transformers.js
+- Search across curated entries plus online Wikipedia nature topics
+- Save discoveries locally; signed-in users can sync favorites with Supabase
+- Supabase email registration, login and profile display (requires setup below)
+- Outdoor inspiration and nature facts
 - Optional browser location permission
-- Responsive layout for phones and desktops
+- Responsive layout, transitions and animated interactions
+- About, Imprint/Impressum and Privacy/Datenschutz information pages
 
-## Run with GitHub Pages
-1. Open this repository's **Settings → Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
+## Publish with GitHub Pages
+1. Open **Settings → Pages**.
+2. Under **Build and deployment**, select **Deploy from a branch**.
 3. Select branch **main** and folder **/(root)**, then save.
-4. Wait for the Pages deployment to finish. Your site URL will appear in the Pages section.
+4. Wait for deployment. GitHub shows the public URL in the Pages section.
 
-The entry file is `index.html` in the repository root, so no build step is required.
+## Set up real user accounts (Supabase)
+Registration is intentionally disabled until you configure your own Supabase project.
+1. Create a project in Supabase and open **Project Settings → API**.
+2. Copy the Project URL and the anon/public key (never use the service_role key).
+3. Replace the placeholders in `supabase-config.js` with those two public values.
+4. In the Supabase SQL Editor, run the complete script from `supabase/schema.sql`.
+5. In Supabase Authentication settings, configure the allowed site URL and redirect URLs to your GitHub Pages URL.
+6. Test registration and email confirmation, then log in. Email delivery and confirmation depend on your Supabase project settings.
 
-## Open in GitHub Codespaces
-1. Open the repository on GitHub.
-2. Press the green **Code** button.
-3. Choose **Codespaces → Create codespace on main**.
-4. In the Codespaces terminal, run:
-   ```bash
-   python3 -m http.server 8000
-   ```
-5. Open the **Ports** tab and open port **8000** in the browser.
+The database enables row-level security. Users can only read and manage their own profile and favorites. Do not put private keys or database passwords in frontend files.
+
+## AI photo guide — important limitations
+The current model is a general-purpose image classifier. It returns visual category suggestions, not guaranteed plant or animal species identification. It may be unable to distinguish similar species. First use downloads the model and requires an internet connection. The selected photo is processed in the browser by this app and is not uploaded to a Wildora server. Never eat or handle an unknown plant, mushroom or animal based on an AI result.
+
+## Search
+Wildora searches its curated starter guide and can request additional article summaries and thumbnails from the Wikipedia API. Wikipedia content and images are provided by Wikipedia; open the source article for context and licensing information.
+
+## Legal pages — must be completed before public operation
+The Impressum and privacy pages contain clearly marked draft placeholders. They are not legal advice and are not a completed legal notice. Replace all bracketed provider/contact details and review the privacy text for the services, data flows and legal requirements that actually apply. Do not publish fake personal or business details. If you are under 18, ask a parent or guardian to help with the legal and account-provider setup.
+
+## Run in Codespaces
+1. Open the repository, press **Code → Codespaces → Create codespace on main**.
+2. In the terminal run `python3 -m http.server 8000`.
+3. Open forwarded port **8000** in the Ports tab.
 
 The `.devcontainer/devcontainer.json` file provides a ready-to-use development container.
 
-## AI recognition notes
-The photo guide uses a general-purpose image-classification model loaded from Hugging Face through Transformers.js. The model downloads on first use and performs inference in the browser. This requires an internet connection the first time. It returns visual category suggestions, **not guaranteed species identification**; fine-grained plant, mushroom, insect or animal identification is not yet supported reliably. Treat results as suggestions and confirm important identifications with a trusted nature expert or guide.
-
-## Privacy
-- The selected photo is processed in the browser and is not uploaded by Wildora.
-- Saved discoveries are stored in local browser storage.
-- Location is requested only after the user presses **Use my location**.
-
-## Credits
-The AI library and model are loaded from their public distribution endpoints. See the Transformers.js and model pages for their licenses and usage terms.
+## Privacy notes
+- Photo classification runs in the browser; Wildora does not upload the selected photo.
+- Local saved discoveries use browser local storage.
+- If configured, account email/authentication and synced favorites are handled by Supabase.
+- Search requests go to Wikipedia; AI libraries/model files load from public CDNs.
+- Location is requested only after the visitor presses the location button.
